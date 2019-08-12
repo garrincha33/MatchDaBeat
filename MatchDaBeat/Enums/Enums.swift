@@ -6,9 +6,8 @@
 //  Copyright © 2019 twisted echo. All rights reserved.
 //
 
- //MARK:- step 3 create enums
 
-import Foundation
+import UIKit
 
 extension CaseIterable where AllCases.Element: Equatable {
     static func make(index: Int) -> Self {
@@ -42,4 +41,19 @@ public enum Sounds : String {
             return ext.mp3.rawValue
         }
     }
+    
+    //MARK: - step 1 add colors for sounds
+    
+    var color: UIColor {
+        switch self {
+        case .crash:
+            return UIColor.blue
+        case .snare:
+            return UIColor.purple
+        case .kick:
+            return UIColor.green
+        }
+    }
 }
+
+
