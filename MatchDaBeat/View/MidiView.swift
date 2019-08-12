@@ -10,12 +10,8 @@ import UIKit
 
 public class MidiView : UIView {
 
-//    lazy var snare = MidiButton(sound: Sounds.snare)
-//    lazy var crash = MidiButton(sound: Sounds.crash)
-//    lazy var kick = MidiButton(sound: Sounds.kick)
-    
-    //MARK:- step 1 make array of sounds
-    private var sounds = [Sounds.snare, Sounds.crash, Sounds.kick]
+    //MARK:- step 8 add voice
+    private var sounds = [Sounds.snare, Sounds.crash, Sounds.kick, Sounds.voice]
     private var identifier = "cell"
 
     private lazy var collectionView : UICollectionView = {
@@ -26,7 +22,6 @@ public class MidiView : UIView {
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
-        //MARK:- step 3 enable scorlling
         collectionView.isScrollEnabled = false
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -48,7 +43,9 @@ public class MidiView : UIView {
 
     fileprivate func setupMidi(){
         print("setup midi called")
-        backgroundColor = .gray
+        //MARK:- step 9 change bg color to black
+        //backgroundColor = .gray
+        backgroundColor = .black
         layer.cornerRadius = 20
         clipsToBounds = true
         isMultipleTouchEnabled = true
@@ -57,15 +54,14 @@ public class MidiView : UIView {
         addSubview(collectionView)
         collectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
-        //MARK:- step 4 adjust top anchor
         collectionView.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
-        //MARK:- step 5 add long press
+
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleMoveGesture(_:)))
         collectionView.addGestureRecognizer(longPress)
 
     }
-    //MARK:- step 6 create selector handle move function
+
     @objc func handleMoveGesture(_ sender : UILongPressGestureRecognizer){
         switch(sender.state) {
         case .began:

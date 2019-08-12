@@ -14,7 +14,7 @@ public class MidiCell : UICollectionViewCell {
     public var sound : Sounds? {
         didSet{
             url = Bundle.main.url(forResource: sound!.rawValue, withExtension: sound!.fileExtension)
-            buttonArea.backgroundColor = sound!.color
+            //buttonArea.backgroundColor = sound!.color
         }
     }
     private var url : URL?
@@ -25,6 +25,12 @@ public class MidiCell : UICollectionViewCell {
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
+        //MARK:- step 5 adjust color scheme
+        view.backgroundColor = .lightGray
+        view.layer.shadowColor = UIColor.gray.cgColor
+        view.layer.shadowOffset = CGSize(width: 5, height: 5)
+        view.layer.shadowRadius = 5
+        view.layer.shadowOpacity = 0.5
         return view
     }()
     
@@ -42,7 +48,7 @@ public class MidiCell : UICollectionViewCell {
         backgroundColor = .clear
         
         addSubview(buttonArea)
-        buttonArea.alpha = 0.2
+        //buttonArea.alpha = 0.2
         
         buttonArea.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
         buttonArea.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
@@ -52,15 +58,27 @@ public class MidiCell : UICollectionViewCell {
     
     public func animate(){
         UIView.animate(withDuration: 0.1, animations: {
-            self.buttonArea.alpha = 1
+            //MARK:- step 6 adjust alpha
+            //self.buttonArea.alpha = 1
+            self.buttonArea.backgroundColor = self.sound?.color
         }) { (_) in
             UIView.animate(withDuration: 0.1, animations: {
-                self.buttonArea.alpha = 0.2
+                //MARK:- step 6 adjust alpha
+                //self.buttonArea.alpha = 0.2
+                self.buttonArea.backgroundColor = .lightGray
             })
         }
     }
     
     public func playSound(){
+        //MARK:- step 7 check voice
+        if (sound == Sounds.voice) {
+            let speechUtterance: AVSpeechUtterance = AVSpeechUtterance(string: "Welcome To Match Da Beat")
+            speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+            let speechSynthesizer = AVSpeechSynthesizer()
+            speechSynthesizer.speak(speechUtterance)
+            return
+        }
         guard let url = url else {return}
         print("url exists")
         do {
