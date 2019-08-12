@@ -15,7 +15,7 @@ extension CaseIterable where AllCases.Element: Equatable {
         return a[a.index(a.startIndex, offsetBy: index)]
     }
 }
-//MARK:- step 1 make sounds CaseIterable
+
 public enum Sounds : String, CaseIterable {
     case crash
     case kick

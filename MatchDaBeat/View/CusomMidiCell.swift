@@ -6,7 +6,6 @@
 //  Copyright © 2019 twisted echo. All rights reserved.
 //
 
-//MARK:- step 2 crate custom midiCell
 
 import UIKit
 import AVFoundation
