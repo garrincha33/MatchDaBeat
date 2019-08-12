@@ -21,6 +21,7 @@
 		1B0B52062301616600759822 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B52052301616600759822 /* Enums.swift */; };
 		1B0B520823017ED800759822 /* CusomMidiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B520723017ED800759822 /* CusomMidiCell.swift */; };
 		1B0B520A23017F2700759822 /* CustomMidiFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B520923017F2700759822 /* CustomMidiFlowLayout.swift */; };
+		1B0B520C23019AF200759822 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B520B23019AF200759822 /* GameViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		1B0B52052301616600759822 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		1B0B520723017ED800759822 /* CusomMidiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CusomMidiCell.swift; sourceTree = "<group>"; };
 		1B0B520923017F2700759822 /* CustomMidiFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMidiFlowLayout.swift; sourceTree = "<group>"; };
+		1B0B520B23019AF200759822 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				1B0B51F723015E7D00759822 /* MyViewController.swift */,
+				1B0B520B23019AF200759822 /* GameViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -209,6 +212,7 @@
 				1B0B520A23017F2700759822 /* CustomMidiFlowLayout.swift in Sources */,
 				1B0B52032301611E00759822 /* MidiButton.swift in Sources */,
 				1B0B51F823015E7D00759822 /* MyViewController.swift in Sources */,
+				1B0B520C23019AF200759822 /* GameViewController.swift in Sources */,
 				1B0B51E323015BBF00759822 /* AppDelegate.swift in Sources */,
 				1B0B520823017ED800759822 /* CusomMidiCell.swift in Sources */,
 				1B0B52062301616600759822 /* Enums.swift in Sources */,

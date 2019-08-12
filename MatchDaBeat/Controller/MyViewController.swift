@@ -10,11 +10,16 @@ import UIKit
 
 
 class MyViewController : UIViewController {
-
+    
+    let controller = GameViewController()
+    
     override func loadView() {
-
-        let view = MidiView(frame: CGRect(x: 0, y:0, width: 768, height: 512))
+        
+        let view = controller.midiView
         self.view = view
+        
+        print("test")
 
     }
+
 }

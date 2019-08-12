@@ -30,11 +30,15 @@ public class MidiView : UIView {
         return collectionView
     }()
 
+    //MARK:- step 6 chage to required init
     public override init(frame: CGRect) {
         super.init(frame: frame)
-
         setupMidi()
-        
+    }
+    
+    public required init() {
+        super.init(frame: .zero)
+        setupMidi()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -43,19 +47,19 @@ public class MidiView : UIView {
 
     fileprivate func setupMidi(){
         print("setup midi called")
-        //MARK:- step 9 change bg color to black
-        //backgroundColor = .gray
-        backgroundColor = .black
+        //MARK:- step 7 update background
+        translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .clear
         layer.cornerRadius = 20
         clipsToBounds = true
         isMultipleTouchEnabled = true
         isUserInteractionEnabled = true
-        
+        //MARK:- step 8 change constants
         addSubview(collectionView)
-        collectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
-        collectionView.topAnchor.constraint(equalTo: topAnchor, constant: 20).isActive = true
-        collectionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
+        collectionView.topAnchor.constraint(equalTo: topAnchor, constant: 0).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0).isActive = true
 
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleMoveGesture(_:)))
         collectionView.addGestureRecognizer(longPress)
@@ -78,7 +82,7 @@ public class MidiView : UIView {
         }
     }
 }
-//MARK:- step 7 amend extension
+
 extension MidiView : UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -91,22 +95,29 @@ extension MidiView : UICollectionViewDataSource, UICollectionViewDelegate, UICol
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! MidiCell
-        //MARK:- step 2 sounds = index path
         cell.sound = sounds[indexPath.row]
         return cell
     }
     
     //selection
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = collectionView.cellForItem(at: indexPath) as? MidiCell else {return}
-        cell.animate()
-        cell.playSound()
+        //MARK:- step 9 remove did select
+//        guard let cell = collectionView.cellForItem(at: indexPath) as? MidiCell else {return}
+//        cell.animate()
+//        cell.playSound()
+    }
+    //MARK:- step 10 add shouldSelect
+    public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        return true
     }
     
     //sizing
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let side = collectionView.bounds.width / 3 - 10
-        return CGSize(width: side, height: side)
+        //MARK:- step 11 adjust t  hieght
+
+        let width = collectionView.bounds.width / 3 - 9
+        let height = collectionView.bounds.height / 2 - 6
+        return CGSize(width: width, height: height)
     }
     
     //moving
