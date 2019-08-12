@@ -12,6 +12,13 @@
 		1B0B51E823015BBF00759822 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B0B51E623015BBF00759822 /* Main.storyboard */; };
 		1B0B51EA23015BC000759822 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B0B51E923015BC000759822 /* Assets.xcassets */; };
 		1B0B51ED23015BC000759822 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B0B51EB23015BC000759822 /* LaunchScreen.storyboard */; };
+		1B0B51F823015E7D00759822 /* MyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B51F723015E7D00759822 /* MyViewController.swift */; };
+		1B0B51FC2301605C00759822 /* crash.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1B0B51F92301605B00759822 /* crash.mp3 */; };
+		1B0B51FD2301605C00759822 /* kick.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1B0B51FA2301605B00759822 /* kick.mp3 */; };
+		1B0B51FE2301605C00759822 /* snare.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1B0B51FB2301605B00759822 /* snare.mp3 */; };
+		1B0B5201230160DB00759822 /* MidiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B5200230160DB00759822 /* MidiView.swift */; };
+		1B0B52032301611E00759822 /* MidiButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B52022301611E00759822 /* MidiButton.swift */; };
+		1B0B52062301616600759822 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B52052301616600759822 /* Enums.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +29,13 @@
 		1B0B51E923015BC000759822 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1B0B51EC23015BC000759822 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1B0B51EE23015BC000759822 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1B0B51F723015E7D00759822 /* MyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyViewController.swift; sourceTree = "<group>"; };
+		1B0B51F92301605B00759822 /* crash.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = crash.mp3; sourceTree = "<group>"; };
+		1B0B51FA2301605B00759822 /* kick.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = kick.mp3; sourceTree = "<group>"; };
+		1B0B51FB2301605B00759822 /* snare.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = snare.mp3; sourceTree = "<group>"; };
+		1B0B5200230160DB00759822 /* MidiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiView.swift; sourceTree = "<group>"; };
+		1B0B52022301611E00759822 /* MidiButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiButton.swift; sourceTree = "<group>"; };
+		1B0B52052301616600759822 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +68,11 @@
 		1B0B51E123015BBF00759822 /* MatchDaBeat */ = {
 			isa = PBXGroup;
 			children = (
+				1B0B52042301615700759822 /* Enums */,
+				1B0B51FF2301606500759822 /* Sounds */,
+				1B0B51F623015E6F00759822 /* Controller */,
+				1B0B51F523015E6A00759822 /* View */,
+				1B0B51F423015E6300759822 /* Model */,
 				1B0B51E223015BBF00759822 /* AppDelegate.swift */,
 				1B0B51E423015BBF00759822 /* ViewController.swift */,
 				1B0B51E623015BBF00759822 /* Main.storyboard */,
@@ -62,6 +81,48 @@
 				1B0B51EE23015BC000759822 /* Info.plist */,
 			);
 			path = MatchDaBeat;
+			sourceTree = "<group>";
+		};
+		1B0B51F423015E6300759822 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1B0B51F523015E6A00759822 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1B0B5200230160DB00759822 /* MidiView.swift */,
+				1B0B52022301611E00759822 /* MidiButton.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1B0B51F623015E6F00759822 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				1B0B51F723015E7D00759822 /* MyViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		1B0B51FF2301606500759822 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				1B0B51F92301605B00759822 /* crash.mp3 */,
+				1B0B51FA2301605B00759822 /* kick.mp3 */,
+				1B0B51FB2301605B00759822 /* snare.mp3 */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
+		1B0B52042301615700759822 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				1B0B52052301616600759822 /* Enums.swift */,
+			);
+			path = Enums;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -122,8 +183,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B0B51FC2301605C00759822 /* crash.mp3 in Resources */,
+				1B0B51FD2301605C00759822 /* kick.mp3 in Resources */,
 				1B0B51ED23015BC000759822 /* LaunchScreen.storyboard in Resources */,
 				1B0B51EA23015BC000759822 /* Assets.xcassets in Resources */,
+				1B0B51FE2301605C00759822 /* snare.mp3 in Resources */,
 				1B0B51E823015BBF00759822 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,7 +200,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B0B51E523015BBF00759822 /* ViewController.swift in Sources */,
+				1B0B52032301611E00759822 /* MidiButton.swift in Sources */,
+				1B0B51F823015E7D00759822 /* MyViewController.swift in Sources */,
 				1B0B51E323015BBF00759822 /* AppDelegate.swift in Sources */,
+				1B0B52062301616600759822 /* Enums.swift in Sources */,
+				1B0B5201230160DB00759822 /* MidiView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
