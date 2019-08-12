@@ -14,14 +14,9 @@ extension CaseIterable where AllCases.Element: Equatable {
         let a = Self.allCases
         return a[a.index(a.startIndex, offsetBy: index)]
     }
-    
-    func index() -> Int {
-        let a = Self.allCases
-        return a.distance(from: a.startIndex, to: a.firstIndex(of: self)!)
-    }
 }
-
-public enum Sounds : String {
+//MARK:- step 1 make sounds CaseIterable
+public enum Sounds : String, CaseIterable {
     case crash
     case kick
     case snare
@@ -41,9 +36,7 @@ public enum Sounds : String {
             return ext.mp3.rawValue
         }
     }
-    
-    //MARK: - step 1 add colors for sounds
-    
+
     var color: UIColor {
         switch self {
         case .crash:

@@ -11,12 +11,9 @@ import AVFoundation
 
 public class MidiButton : UIView, UIGestureRecognizerDelegate {
 
-    //MARK: - step 2 create sound
     private var sound : Sounds!
-    //MARK: - step 8 an array of players
     private var players = [AVAudioPlayer]()
-    
-    //MARK: - step 3 create new init
+
     public required init(sound: Sounds) {
         self.sound = sound
         super.init(frame: .zero)
@@ -30,15 +27,13 @@ public class MidiButton : UIView, UIGestureRecognizerDelegate {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
-    //MARK: - step 5 create new setupView
+
     fileprivate func setupView(){
         backgroundColor = sound.color
         alpha = 0.2
         layer.cornerRadius = 10
         clipsToBounds = true
         isUserInteractionEnabled = true
-        //MARK: - step 9 enable multi touch
         isMultipleTouchEnabled = true
         translatesAutoresizingMaskIntoConstraints = false
     }
@@ -48,8 +43,7 @@ public class MidiButton : UIView, UIGestureRecognizerDelegate {
         animatePressed()
         playSound()
     }
-    
-    //MARK: - step 6 update animations
+
     fileprivate func animatePressed(){
 
         UIView.animate(withDuration: 0.2, animations: {
@@ -60,7 +54,7 @@ public class MidiButton : UIView, UIGestureRecognizerDelegate {
             })
         }
     }
-    //MARK: - step 10 create new setupPlayer func
+
     fileprivate func playSound(){
         print(sound.rawValue, sound.fileExtension)
         guard let url = Bundle.main.url(forResource: sound.rawValue, withExtension: sound.fileExtension) else { return }
@@ -77,7 +71,6 @@ public class MidiButton : UIView, UIGestureRecognizerDelegate {
     }
 }
 
-//MARK: - step 11 extend midibutton
 extension MidiButton : AVAudioPlayerDelegate {
     public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         let index = players.firstIndex(of: player)!

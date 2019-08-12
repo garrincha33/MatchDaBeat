@@ -13,10 +13,8 @@ class MyViewController : UIViewController {
 
     override func loadView() {
 
-        //MARK: - step 12 create midiView with sounds
         let view = MidiView(frame: CGRect(x: 0, y:0, width: 768, height: 512))
         self.view = view
 
     }
-    
 }
