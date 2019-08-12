@@ -10,11 +10,11 @@
 import UIKit
 import AVFoundation
 
-public class MidiCell : UICollectionViewCell {
+//MARK:- step 2 add uigestureDelegate
+public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
     public var sound : Sounds? {
         didSet{
             url = Bundle.main.url(forResource: sound!.rawValue, withExtension: sound!.fileExtension)
-            //buttonArea.backgroundColor = sound!.color
         }
     }
     private var url : URL?
@@ -25,7 +25,9 @@ public class MidiCell : UICollectionViewCell {
         view.layer.cornerRadius = 10
         view.clipsToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
-        //MARK:- step 5 adjust color scheme
+        //MARK:- step 3 isUserInteractionEnabled & isMultipleTouchEnabled
+        view.isUserInteractionEnabled = true
+        view.isMultipleTouchEnabled = true
         view.backgroundColor = .lightGray
         view.layer.shadowColor = UIColor.gray.cgColor
         view.layer.shadowOffset = CGSize(width: 5, height: 5)
@@ -46,32 +48,35 @@ public class MidiCell : UICollectionViewCell {
     
     fileprivate func setupView(){
         backgroundColor = .clear
-        
         addSubview(buttonArea)
-        //buttonArea.alpha = 0.2
-        
         buttonArea.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
         buttonArea.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
         buttonArea.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
         buttonArea.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
+        
+        //MARK:- step 4 add tap gesture
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapped(_:)))
+        tap.delegate = self
+        buttonArea.addGestureRecognizer(tap)
+    }
+    
+    //MARK:- step 5 create gesture tapped selector function
+    @objc func tapped(_ sender: UITapGestureRecognizer){
+        animate()
+        playSound()
     }
     
     public func animate(){
         UIView.animate(withDuration: 0.1, animations: {
-            //MARK:- step 6 adjust alpha
-            //self.buttonArea.alpha = 1
             self.buttonArea.backgroundColor = self.sound?.color
         }) { (_) in
             UIView.animate(withDuration: 0.1, animations: {
-                //MARK:- step 6 adjust alpha
-                //self.buttonArea.alpha = 0.2
                 self.buttonArea.backgroundColor = .lightGray
             })
         }
     }
     
     public func playSound(){
-        //MARK:- step 7 check voice
         if (sound == Sounds.voice) {
             let speechUtterance: AVSpeechUtterance = AVSpeechUtterance(string: "Welcome To Match Da Beat")
             speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US")

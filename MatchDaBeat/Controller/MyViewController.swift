@@ -10,11 +10,17 @@ import UIKit
 
 
 class MyViewController : UIViewController {
-
+    
+    let controller = GameViewController()
+    
     override func loadView() {
-
-        let view = MidiView(frame: CGRect(x: 0, y:0, width: 768, height: 512))
+        
+        let view = controller.midiView
         self.view = view
-
+        
+        //---WORKS accessing view directily but my view is instatiated inside gameViewController......unable to use here and need to
+//        let view = MidiView(frame: CGRect(x: 0, y:0, width: 768, height: 512))
+//        self.view = view
     }
+
 }
