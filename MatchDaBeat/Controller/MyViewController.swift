@@ -10,14 +10,13 @@ import UIKit
 
 
 class MyViewController : UIViewController {
-    
-    //MARK:- step 1
-    
+
     override func loadView() {
-        
-        //MARK:- step 6 create test button
-        let button = MidiButton(frame: .zero, sound: Sounds.kick)
-        self.view = button
+
+        //MARK: - step 12 create midiView with sounds
+        let view = MidiView(frame: CGRect(x: 0, y:0, width: 768, height: 512))
+        self.view = view
+
     }
     
 }

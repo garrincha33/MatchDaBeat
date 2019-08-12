@@ -6,100 +6,81 @@
 //  Copyright © 2019 twisted echo. All rights reserved.
 //
 
- //MARK:- step 4 create midiButton
-
 import UIKit
 import AVFoundation
-import SpriteKit
 
 public class MidiButton : UIView, UIGestureRecognizerDelegate {
-    private var player : AVAudioPlayer?
+
+    //MARK: - step 2 create sound
+    private var sound : Sounds!
+    //MARK: - step 8 an array of players
+    private var players = [AVAudioPlayer]()
     
-    private let sceneView = SKView()
-    private let scene = SKScene()
-    
-    //    private lazy var pulse : SKEmitterNode = {
-    //        let node = SKEmitterNode(fileNamed: "pulse.sks")
-    //        node?.particleColor = .yellow
-    //        return node!
-    //    }()
-    
-    
-    public required init(frame: CGRect, sound: Sounds) {
-        super.init(frame: frame)
+    //MARK: - step 3 create new init
+    public required init(sound: Sounds) {
+        self.sound = sound
+        super.init(frame: .zero)
         //initializing tap recognizer
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapped(_:)))
         tap.delegate = self
         addGestureRecognizer(tap)
-        setupPlayer(withSound: sound)
         setupView()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
+    //MARK: - step 5 create new setupView
     fileprivate func setupView(){
-        backgroundColor = .lightGray
+        backgroundColor = sound.color
+        alpha = 0.2
         layer.cornerRadius = 10
         clipsToBounds = true
         isUserInteractionEnabled = true
-        
-        //        sceneView.frame = frame
-        //        sceneView.backgroundColor = .clear
-        //        addSubview(sceneView)
-        //
-        //        scene.size = frame.size
-        //        scene.scaleMode = .aspectFit
-        //        scene.backgroundColor = .clear
+        //MARK: - step 9 enable multi touch
+        isMultipleTouchEnabled = true
+        translatesAutoresizingMaskIntoConstraints = false
     }
     
     @objc func tapped(_ sender: UITapGestureRecognizer){
         print("tapped")
         animatePressed()
-        if let player = player, player.isPlaying {
-            player.stop()
-        }
-        player?.play()
+        playSound()
     }
     
+    //MARK: - step 6 update animations
     fileprivate func animatePressed(){
-        //        let pulseAnimation = CABasicAnimation(keyPath: "opacity")
-        //        pulseAnimation.duration = 30
-        //        pulseAnimation.fromValue = 0
-        //        pulseAnimation.toValue = 1
-        //        pulseAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        //        pulseAnimation.autoreverses = true
-        //        pulseAnimation.repeatCount = 0
-        //        layer.add(pulseAnimation, forKey: nil)
-        
-        //        pulse.position = sceneView.center
-        //        scene.addChild(scene)
-        //        sceneView.presentScene(scene)
-        
+
         UIView.animate(withDuration: 0.2, animations: {
-            self.backgroundColor = .yellow
+            self.alpha = 1
         }) { (_) in
             UIView.animate(withDuration: 0.2, animations: {
-                self.backgroundColor = .lightGray
+                self.alpha = 2
             })
         }
     }
-    
-    fileprivate func setupPlayer(withSound sound : Sounds){
+    //MARK: - step 10 create new setupPlayer func
+    fileprivate func playSound(){
         print(sound.rawValue, sound.fileExtension)
         guard let url = Bundle.main.url(forResource: sound.rawValue, withExtension: sound.fileExtension) else { return }
         print("found url")
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-            
-            player = try AVAudioPlayer(contentsOf: url)
-            player?.prepareToPlay()
-            
+            let player = try AVAudioPlayer(contentsOf: url)
+            player.delegate = self
+            players.append(player)
+            player.prepareToPlay()
+            print(player.play())
         } catch let error {
             print(error.localizedDescription)
         }
-        
+    }
+}
+
+//MARK: - step 11 extend midibutton
+extension MidiButton : AVAudioPlayerDelegate {
+    public func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        let index = players.firstIndex(of: player)!
+        players.remove(at: index)
     }
 }

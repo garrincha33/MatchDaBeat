@@ -6,22 +6,20 @@
 //  Copyright © 2019 twisted echo. All rights reserved.
 //
 
-//MARK:- step 5 create midiView
-
 import UIKit
 
 public class MidiView : UIView {
-    lazy var parentStack : UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.distribution = .fillEqually
-        return stack
-    }()
-    
-    lazy var snare =  MidiButton(frame: .init(x: 16, y: 16, width: 16, height: 16), sound: Sounds(rawValue: "kick") ?? Sounds(rawValue: "snare")!)
-    
+   
+    //MARK: - step 7 add lazy sounds
+    lazy var snare = MidiButton(sound: Sounds.snare)
+    lazy var crash = MidiButton(sound: Sounds.crash)
+    lazy var kick = MidiButton(sound: Sounds.kick)
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        //MARK: - step 9 call setup midi
+        setupMidi()
         
     }
     
@@ -29,4 +27,34 @@ public class MidiView : UIView {
         super.init(coder: aDecoder)
     }
     
+    //MARK: - step 8 & step 11 add subview to display
+    fileprivate func setupMidi(){
+        backgroundColor = .white
+        isMultipleTouchEnabled = true
+        isUserInteractionEnabled = true
+        let stack = UIStackView(frame: frame)
+        stack.axis = .vertical
+        stack.distribution = .fillEqually
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(stack)
+        stack.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        stack.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        stack.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        stack.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
+        let topStack = UIStackView()
+        topStack.axis = .horizontal
+        topStack.distribution = .fillEqually
+        topStack.addArrangedSubview(crash)
+        topStack.addArrangedSubview(snare)
+        
+        let bottomStack = UIStackView()
+        bottomStack.axis = .horizontal
+        bottomStack.distribution = .fillEqually
+        bottomStack.addArrangedSubview(kick)
+        
+        stack.addArrangedSubview(topStack)
+        stack.addArrangedSubview(bottomStack)
+    }
 }
