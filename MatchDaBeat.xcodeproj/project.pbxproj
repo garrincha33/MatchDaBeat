@@ -19,6 +19,8 @@
 		1B0B5201230160DB00759822 /* MidiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B5200230160DB00759822 /* MidiView.swift */; };
 		1B0B52032301611E00759822 /* MidiButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B52022301611E00759822 /* MidiButton.swift */; };
 		1B0B52062301616600759822 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B52052301616600759822 /* Enums.swift */; };
+		1B0B520823017ED800759822 /* CusomMidiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B520723017ED800759822 /* CusomMidiCell.swift */; };
+		1B0B520A23017F2700759822 /* CustomMidiFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B520923017F2700759822 /* CustomMidiFlowLayout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		1B0B5200230160DB00759822 /* MidiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiView.swift; sourceTree = "<group>"; };
 		1B0B52022301611E00759822 /* MidiButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiButton.swift; sourceTree = "<group>"; };
 		1B0B52052301616600759822 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		1B0B520723017ED800759822 /* CusomMidiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CusomMidiCell.swift; sourceTree = "<group>"; };
+		1B0B520923017F2700759822 /* CustomMidiFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMidiFlowLayout.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +99,8 @@
 			children = (
 				1B0B5200230160DB00759822 /* MidiView.swift */,
 				1B0B52022301611E00759822 /* MidiButton.swift */,
+				1B0B520723017ED800759822 /* CusomMidiCell.swift */,
+				1B0B520923017F2700759822 /* CustomMidiFlowLayout.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -200,9 +206,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1B0B51E523015BBF00759822 /* ViewController.swift in Sources */,
+				1B0B520A23017F2700759822 /* CustomMidiFlowLayout.swift in Sources */,
 				1B0B52032301611E00759822 /* MidiButton.swift in Sources */,
 				1B0B51F823015E7D00759822 /* MyViewController.swift in Sources */,
 				1B0B51E323015BBF00759822 /* AppDelegate.swift in Sources */,
+				1B0B520823017ED800759822 /* CusomMidiCell.swift in Sources */,
 				1B0B52062301616600759822 /* Enums.swift in Sources */,
 				1B0B5201230160DB00759822 /* MidiView.swift in Sources */,
 			);
