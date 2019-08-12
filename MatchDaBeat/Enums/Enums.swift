@@ -20,10 +20,14 @@ public enum Sounds : String, CaseIterable {
     case crash
     case kick
     case snare
+    //MARK:- step 1 add voice
+    case voice
 
     
     public enum ext : String {
         case mp3
+        //MARK:- step 3 add wav
+        case wav
     }
     
     var fileExtension: String {
@@ -34,6 +38,9 @@ public enum Sounds : String, CaseIterable {
             return ext.mp3.rawValue
         case .kick:
             return ext.mp3.rawValue
+            //MARK:- step 2 add voice
+        case .voice:
+            return ext.wav.rawValue
         }
     }
 
@@ -45,6 +52,9 @@ public enum Sounds : String, CaseIterable {
             return UIColor.purple
         case .kick:
             return UIColor.green
+            //MARK:- step 4 add color
+        case .voice:
+            return UIColor.red
         }
     }
 }
