@@ -6,8 +6,6 @@
 //  Copyright © 2019 twisted echo. All rights reserved.
 //
 
-//MARK:- step 2 add metal shaders
-
 vertex void vertexShader(){
     
 }

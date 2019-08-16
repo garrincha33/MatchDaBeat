@@ -15,7 +15,6 @@ public class Visualizer : UIView {
     private var metalView : MTKView!
     private var metalDevice : MTLDevice!
     private var metalQueue : MTLCommandQueue!
-    //MARK:- step 3 add pipeLinestate
     private var pipelineState: MTLRenderPipelineState!
 
     let circle = UIView()
@@ -67,9 +66,7 @@ public class Visualizer : UIView {
         
         //metalQueue
         metalQueue = metalDevice.makeCommandQueue()!
-        
-        
-        //MARK:- step try catch pipline state function
+
         do {
             pipelineState = try buildRenderPipelineWith(device: metalDevice, metalKitView: metalView)
         } catch {
@@ -80,7 +77,6 @@ public class Visualizer : UIView {
     
     public func setupEngineTap(){
         engine.mainMixerNode.installTap(onBus: 0, bufferSize: 1024, format: nil) { (buffer, time) in
-            //MARK:- step 1 Move calculation logic to background thread
             DispatchQueue.global(qos: .userInitiated).async{
                 let volume = CGFloat(self.getVolume(from: buffer, bufferSize: 1024)) + 1
                 self.aniamteCircle(volume: volume)
@@ -147,7 +143,6 @@ extension Visualizer : MTKViewDelegate {
         commandBuffer.commit()
     }
     
-    //MARK:- step 4 add pipeLinestate function
     func buildRenderPipelineWith(device: MTLDevice, metalKitView: MTKView) throws -> MTLRenderPipelineState {
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
         
