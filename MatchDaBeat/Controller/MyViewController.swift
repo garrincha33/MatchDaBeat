@@ -15,7 +15,7 @@ class MyViewController : UIViewController {
     
     override func loadView() {
         
-        let view = controller.midiView
+        //let view = controller.midiView
         self.view = view
         
         print("test")
