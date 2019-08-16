@@ -7,19 +7,15 @@
 //
 
 import UIKit
-//MARK: -step 4 import avfoudnatuion
 import AVFoundation
 
 public class MidiView : UIView {
 
     private var sounds = [Sounds.snare, Sounds.crash, Sounds.kick] //remove voice here and from enum
     private var identifier = "cell"
-    
-    //MARK: -step 5 create engine, players and the files we are want to play
     private var engine = AVAudioEngine()
-    private var players = [AVAudioPlayerNode]()
-    private var files = [AVAudioFile]()
 
+    //MARK:- step 6 remove player and files
     private lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 1
@@ -40,8 +36,8 @@ public class MidiView : UIView {
     public required init() {
         super.init(frame: .zero)
         setupMidi()
-        //MARK: -step 5 create engine, players and the files we are want to play
-        setupEngineAndPlayers()
+        //MARK:- step 7 create new setupEngine Function
+        setupEngine()
         
     }
     
@@ -83,24 +79,11 @@ public class MidiView : UIView {
             collectionView.cancelInteractiveMovement()
         }
     }
-    //MARK: -step 6 create the engine and players function
-    fileprivate func setupEngineAndPlayers(){
-        //populate players
-        for sound in sounds {
-            let url = Bundle.main.url(forResource: sound.rawValue, withExtension: sound.fileExtension)!
-            do {
-                let audioFile = try AVAudioFile(forReading: url)
-                files.append(audioFile)
-                let format = audioFile.processingFormat
-                let player = AVAudioPlayerNode()
-                players.append(player)
-                engine.attach(player)
-                engine.connect(player, to: engine.mainMixerNode, format: format)
-            } catch let error {
-                print(error.localizedDescription)
-            }
-        }
+
+    //MARK:- step 8 create new setupEngine Function
+    fileprivate func setupEngine(){
         //setup engine
+        engine.mainMixerNode //initialzing the output node to be able to start the engine
         engine.prepare()
         do {
             try engine.start()
@@ -122,17 +105,16 @@ extension MidiView : UICollectionViewDataSource, UICollectionViewDelegate, UICol
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! MidiCell
-        cell.sound = sounds[indexPath.row]
+        cell.sound = sounds[indexPath.item]
+        //MARK:- step 9 add engine
+        cell.engine = engine
         cell.delegate = self
         return cell
     }
     
     //selection
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        //MARK:- step 9 remove did select
-//        guard let cell = collectionView.cellForItem(at: indexPath) as? MidiCell else {return}
-//        cell.animate()
-//        cell.playSound()
+
     }
 
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -155,10 +137,7 @@ extension MidiView : UICollectionViewDataSource, UICollectionViewDelegate, UICol
         let soundToMove = sounds[sourceIndexPath.item]
         sounds.remove(at: sourceIndexPath.item)
         sounds.insert(soundToMove, at: destinationIndexPath.item)
-        //MARK: -step 7 create playerToMove indexes
-        let playerToMove = players[sourceIndexPath.item]
-        players.remove(at: sourceIndexPath.item)
-        players.insert(playerToMove, at: destinationIndexPath.item)
+        //MARK:- step 10 remove players
     }
     //spacing
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -167,14 +146,9 @@ extension MidiView : UICollectionViewDataSource, UICollectionViewDelegate, UICol
 
 }
 
-//MARK: -step 8 use midiCellDelegate and create actions for presssed function
 extension MidiView : MidiCellDelegate {
     func pressed(_ cell: MidiCell) {
         cell.animate()
-        let index = sounds.firstIndex(of: cell.sound!)!
-        let player = players[index]
-        player.scheduleFile(files[index], at: nil, completionHandler: nil)
-        player.play()
-        print(players[index])
+        cell.play()
     }
 }
