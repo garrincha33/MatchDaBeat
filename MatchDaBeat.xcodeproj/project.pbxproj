@@ -23,6 +23,7 @@
 		1B0B520A23017F2700759822 /* CustomMidiFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B520923017F2700759822 /* CustomMidiFlowLayout.swift */; };
 		1B0B520C23019AF200759822 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0B520B23019AF200759822 /* GameViewController.swift */; };
 		1BE5B5B82306DDC00041D03A /* Visualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE5B5B72306DDC00041D03A /* Visualizer.swift */; };
+		1BE5B5BB230706D80041D03A /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 1BE5B5BA230706D80041D03A /* Shaders.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,8 @@
 		1B0B520923017F2700759822 /* CustomMidiFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMidiFlowLayout.swift; sourceTree = "<group>"; };
 		1B0B520B23019AF200759822 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		1BE5B5B72306DDC00041D03A /* Visualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Visualizer.swift; sourceTree = "<group>"; };
+		1BE5B5B9230706A10041D03A /* ShaderDefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderDefs.h; sourceTree = "<group>"; };
+		1BE5B5BA230706D80041D03A /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +97,8 @@
 		1B0B51F423015E6300759822 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				1BE5B5B9230706A10041D03A /* ShaderDefs.h */,
+				1BE5B5BA230706D80041D03A /* Shaders.metal */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -219,6 +224,7 @@
 				1B0B520C23019AF200759822 /* GameViewController.swift in Sources */,
 				1B0B51E323015BBF00759822 /* AppDelegate.swift in Sources */,
 				1B0B520823017ED800759822 /* CusomMidiCell.swift in Sources */,
+				1BE5B5BB230706D80041D03A /* Shaders.metal in Sources */,
 				1B0B52062301616600759822 /* Enums.swift in Sources */,
 				1B0B5201230160DB00759822 /* MidiView.swift in Sources */,
 			);

@@ -11,8 +11,7 @@ import AVFoundation
 
 public class GameViewController : UIViewController {
     private var engine = AVAudioEngine()
-    
-    //MARK:- step 1 make private lables
+
     private lazy var levelLabel : UILabel = {
         let label = UILabel()
         label.text = "Level:"
@@ -32,8 +31,7 @@ public class GameViewController : UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-    //MARK:- step 2 make private Visulaizer and MidiView objects
+
     private var visualizer : Visualizer!
     private var midiView : MidiView!
     
@@ -70,22 +68,16 @@ public class GameViewController : UIViewController {
         topStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 3).isActive = true
         topStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -3).isActive = true
         topStack.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        print(view.bounds)
-        
-        //midiview
-        //midiView = MidiView()
-        
-        
+
         midiView = MidiView(engine: engine)
         view.addSubview(midiView!)
-        //MARK:- step 3 remove optional binding and constant
+
         midiView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         midiView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         midiView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         let midiHeight = view.bounds.height*0.30
         midiView?.heightAnchor.constraint(equalToConstant: midiHeight).isActive = true
-        //MARK:- step 4 add visulaizert
+
         visualizer = Visualizer(engine: engine)
         view.addSubview(visualizer)
         visualizer.topAnchor.constraint(equalTo: topStack.bottomAnchor).isActive = true
@@ -97,8 +89,7 @@ public class GameViewController : UIViewController {
     
     fileprivate func setupEngine(){
         //setup engine
-        //MARK:- step 5 remove mainMixerNode
-        engine.mainMixerNode //initialzing the output node to be able to start the engine
+        _ = engine.mainMixerNode //initialzing the output node to be able to start the engine
         engine.prepare()
         do {
             try engine.start()
