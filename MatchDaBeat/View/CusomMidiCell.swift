@@ -57,7 +57,6 @@ public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
         backgroundColor = .clear
         //tap area
         addSubview(buttonArea)
-        //MARK:- step 6 adjust constants
         buttonArea.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
         buttonArea.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
         buttonArea.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true

@@ -15,23 +15,23 @@ public class Visualizer : UIView {
     private var metalView : MTKView!
     private var metalDevice : MTLDevice!
     private var metalQueue : MTLCommandQueue!
-    
-    //MARK:- step 7 create circle view
+    //MARK:- step 3 add pipeLinestate
+    private var pipelineState: MTLRenderPipelineState!
+
     let circle = UIView()
     
     public required init(engine: AVAudioEngine) {
         self.engine = engine
         super.init(frame: .zero)
-        //MARK:- step 8 setup view and setup engine tap
+
         setupView()
-        //setupMetal()
         setupEngineTap()
     }
     
     public required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-    //MARK:- step 9 create setupView function
+
     fileprivate func setupView(){
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .clear
@@ -50,7 +50,6 @@ public class Visualizer : UIView {
     fileprivate func setupMetal(){
         //metalView
         metalView = MTKView()
-        //MARK:- step 10 add clear to metal
         metalView.backgroundColor = .clear
         metalView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(metalView)
@@ -68,17 +67,26 @@ public class Visualizer : UIView {
         
         //metalQueue
         metalQueue = metalDevice.makeCommandQueue()!
+        
+        
+        //MARK:- step try catch pipline state function
+        do {
+            pipelineState = try buildRenderPipelineWith(device: metalDevice, metalKitView: metalView)
+        } catch {
+            print(error)
+        }
+        
     }
     
     public func setupEngineTap(){
         engine.mainMixerNode.installTap(onBus: 0, bufferSize: 1024, format: nil) { (buffer, time) in
-             //MARK:- step 11 create volume let and animate circle for the volume
-            let volume = CGFloat(self.getVolume(from: buffer, bufferSize: 1024)) + 1
-            self.aniamteCircle(volume: volume)
-            
+            //MARK:- step 1 Move calculation logic to background thread
+            DispatchQueue.global(qos: .userInitiated).async{
+                let volume = CGFloat(self.getVolume(from: buffer, bufferSize: 1024)) + 1
+                self.aniamteCircle(volume: volume)
+            }
         }
     }
-    //MARK:- step 12 create animation for the circle view
     fileprivate func aniamteCircle(volume: CGFloat){
         DispatchQueue.main.async {
             if volume > 1.1 {
@@ -90,13 +98,11 @@ public class Visualizer : UIView {
             }
         }
     }
-    //MARK:- step 13 create function for getVolume
     fileprivate func getVolume(from buffer: AVAudioPCMBuffer, bufferSize: Int) -> Float {
         guard let channelData = buffer.floatChannelData?[0] else {
             return 0
         }
-        
-        //MARK:- step 14 create channel array
+
         let channelDataArray = Array(UnsafeBufferPointer(start:channelData, count: bufferSize))
         
         var outEnvelope = [Float]()
@@ -114,8 +120,6 @@ public class Visualizer : UIView {
             }
             outEnvelope.append(envelopeState)
         }
-        
-        //MARK:- step 15 create volume clip control
         // 0.007 is the low pass filter to prevent
         // getting the noise entering from the microphone
         if let maxVolume = outEnvelope.max(),
@@ -141,6 +145,19 @@ extension Visualizer : MTKViewDelegate {
         renderEncoder.endEncoding()
         commandBuffer.present(view.currentDrawable!)
         commandBuffer.commit()
+    }
+    
+    //MARK:- step 4 add pipeLinestate function
+    func buildRenderPipelineWith(device: MTLDevice, metalKitView: MTKView) throws -> MTLRenderPipelineState {
+        let pipelineDescriptor = MTLRenderPipelineDescriptor()
+        
+        let library = device.makeDefaultLibrary()
+        pipelineDescriptor.vertexFunction = library?.makeFunction(name: "vertexShader")
+        pipelineDescriptor.fragmentFunction = library?.makeFunction(name: "fragmentShader")
+        
+        pipelineDescriptor.colorAttachments[0].pixelFormat = metalKitView.colorPixelFormat
+        
+        return try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
     }
 }
 
