@@ -10,7 +10,6 @@ import UIKit
 
 public class MidiView : UIView {
 
-    //MARK:- step 8 add voice
     private var sounds = [Sounds.snare, Sounds.crash, Sounds.kick, Sounds.voice]
     private var identifier = "cell"
 
@@ -30,7 +29,6 @@ public class MidiView : UIView {
         return collectionView
     }()
 
-    //MARK:- step 6 chage to required init
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setupMidi()
@@ -47,14 +45,12 @@ public class MidiView : UIView {
 
     fileprivate func setupMidi(){
         print("setup midi called")
-        //MARK:- step 7 update background
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .clear
         layer.cornerRadius = 20
         clipsToBounds = true
         isMultipleTouchEnabled = true
         isUserInteractionEnabled = true
-        //MARK:- step 8 change constants
         addSubview(collectionView)
         collectionView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0).isActive = true
@@ -106,15 +102,13 @@ extension MidiView : UICollectionViewDataSource, UICollectionViewDelegate, UICol
 //        cell.animate()
 //        cell.playSound()
     }
-    //MARK:- step 10 add shouldSelect
+
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         return true
     }
     
     //sizing
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        //MARK:- step 11 adjust t  hieght
-
         let width = collectionView.bounds.width / 3 - 9
         let height = collectionView.bounds.height / 2 - 6
         return CGSize(width: width, height: height)
