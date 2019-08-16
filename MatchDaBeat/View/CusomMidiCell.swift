@@ -10,20 +10,23 @@
 import UIKit
 import AVFoundation
 
-//MARK: -step 1 create a protocol to handle pressing a sound
 protocol MidiCellDelegate : AnyObject {
     func pressed(_ cell: MidiCell)
 }
 
 public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
-    public var sound : Sounds? {
+    
+    //MARK:- step 1 clean up use sound
+    public var sound : Sounds?
+    //MARK:- step 2 create didSet for engine
+    public var engine : AVAudioEngine?{
         didSet{
-            url = Bundle.main.url(forResource: sound!.rawValue, withExtension: sound!.fileExtension)
+            setupNode()
         }
     }
-    private var url : URL?
-    private var players = [AVAudioPlayer]()
-    //MARK: -step 2 create a delegate
+    //MARK:- step 3 add player and audioFile
+    private var player = AVAudioPlayerNode()
+    private var audioFile = AVAudioFile()
     weak var delegate : MidiCellDelegate?
     
     private lazy var buttonArea : UIView = {
@@ -65,13 +68,28 @@ public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
         tap.delegate = self
         buttonArea.addGestureRecognizer(tap)
     }
+    
+    //MARK:- step 4 add setupNode function for didSet above
+    fileprivate func setupNode(){
+        let url = Bundle.main.url(forResource: sound!.rawValue, withExtension: sound!.fileExtension)!
+        do {
+            audioFile = try AVAudioFile(forReading: url)
+            let format = audioFile.processingFormat
+            engine!.attach(player)
+            engine!.connect(player, to: engine!.mainMixerNode, format: format)
+        } catch let error {
+            print(error.localizedDescription)
+        }
+    }
 
     @objc func tapped(_ sender: UITapGestureRecognizer){
-//        animate()
-//        playSound()
-//
-        //MARK: -step 3 instead of animate and play sound we want to use delegate.pressed
         delegate?.pressed(self)
+    }
+    
+    //MARK:- step 5 create a player function
+    public func play(){
+        player.scheduleFile(audioFile, at: nil, completionHandler: nil)
+        player.play()
     }
     
     public func animate(){
