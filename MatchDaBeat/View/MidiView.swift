@@ -13,8 +13,6 @@ public class MidiView : UIView {
 
     private var sounds = [Sounds.snare, Sounds.crash, Sounds.kick] //remove voice here and from enum
     private var identifier = "cell"
-    //private var engine = AVAudioEngine()
-    //MARK:- step 9 create an engine object
     private var engine : AVAudioEngine
 
     private lazy var collectionView : UICollectionView = {
@@ -35,15 +33,12 @@ public class MidiView : UIView {
 
     
     public required init(engine: AVAudioEngine) {
-        //MARK:- step 10 insitailze engine
         self.engine = engine
         super.init(frame: .zero)
         setupMidi()
-        //setupEngine()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        //MARK:- step 11 remove super init and use fatalError
         fatalError()
     }
 

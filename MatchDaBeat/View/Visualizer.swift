@@ -5,31 +5,53 @@
 //  Created by Richard Price on 16/08/2019.
 //  Copyright © 2019 twisted echo. All rights reserved.
 //
-//MARK:- step 12 create visualizer class
 import UIKit
 import AVFoundation
 import MetalKit
 
 public class Visualizer : UIView {
-    private var engine : AVAudioEngine
     
+    private var engine : AVAudioEngine
     private var metalView : MTKView!
     private var metalDevice : MTLDevice!
     private var metalQueue : MTLCommandQueue!
     
+    //MARK:- step 7 create circle view
+    let circle = UIView()
+    
     public required init(engine: AVAudioEngine) {
         self.engine = engine
         super.init(frame: .zero)
-        setupMetal()
+        //MARK:- step 8 setup view and setup engine tap
+        setupView()
+        //setupMetal()
+        setupEngineTap()
     }
     
     public required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
+    //MARK:- step 9 create setupView function
+    fileprivate func setupView(){
+        translatesAutoresizingMaskIntoConstraints = false
+        backgroundColor = .clear
+        
+        addSubview(circle)
+        circle.translatesAutoresizingMaskIntoConstraints = false
+        circle.backgroundColor = .white
+        circle.layer.cornerRadius = 50
+        circle.clipsToBounds = true
+        circle.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        circle.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        circle.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        circle.heightAnchor.constraint(equalToConstant: 100).isActive = true
+    }
     
     fileprivate func setupMetal(){
         //metalView
         metalView = MTKView()
+        //MARK:- step 10 add clear to metal
+        metalView.backgroundColor = .clear
         metalView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(metalView)
         metalView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
@@ -38,7 +60,6 @@ public class Visualizer : UIView {
         metalView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         
         metalView.delegate = self
-        
         //metalDevice
         metalDevice = MTLCreateSystemDefaultDevice()
         metalView.device = metalDevice
@@ -49,9 +70,59 @@ public class Visualizer : UIView {
         metalQueue = metalDevice.makeCommandQueue()!
     }
     
-    fileprivate func setupEngineTap(){
+    public func setupEngineTap(){
         engine.mainMixerNode.installTap(onBus: 0, bufferSize: 1024, format: nil) { (buffer, time) in
+             //MARK:- step 11 create volume let and animate circle for the volume
+            let volume = CGFloat(self.getVolume(from: buffer, bufferSize: 1024)) + 1
+            self.aniamteCircle(volume: volume)
             
+        }
+    }
+    //MARK:- step 12 create animation for the circle view
+    fileprivate func aniamteCircle(volume: CGFloat){
+        DispatchQueue.main.async {
+            if volume > 1.1 {
+                print(volume)
+                self.circle.transform = CGAffineTransform.identity
+                self.circle.transform = CGAffineTransform(scaleX: volume , y: volume)
+            } else {
+                self.circle.transform = CGAffineTransform.identity
+            }
+        }
+    }
+    //MARK:- step 13 create function for getVolume
+    fileprivate func getVolume(from buffer: AVAudioPCMBuffer, bufferSize: Int) -> Float {
+        guard let channelData = buffer.floatChannelData?[0] else {
+            return 0
+        }
+        
+        //MARK:- step 14 create channel array
+        let channelDataArray = Array(UnsafeBufferPointer(start:channelData, count: bufferSize))
+        
+        var outEnvelope = [Float]()
+        var envelopeState:Float = 0
+        let envConstantAtk:Float = 0.16
+        let envConstantDec:Float = 0.003
+        
+        for sample in channelDataArray {
+            let rectified = abs(sample)
+            
+            if envelopeState < rectified {
+                envelopeState += envConstantAtk * (rectified - envelopeState)
+            } else {
+                envelopeState += envConstantDec * (rectified - envelopeState)
+            }
+            outEnvelope.append(envelopeState)
+        }
+        
+        //MARK:- step 15 create volume clip control
+        // 0.007 is the low pass filter to prevent
+        // getting the noise entering from the microphone
+        if let maxVolume = outEnvelope.max(),
+            maxVolume > Float(0.015) {
+            return maxVolume
+        } else {
+            return 0.0
         }
     }
 }
@@ -66,9 +137,7 @@ extension Visualizer : MTKViewDelegate {
         
         renderDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 0)
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderDescriptor) else {return}
-        
-        
-        
+
         renderEncoder.endEncoding()
         commandBuffer.present(view.currentDrawable!)
         commandBuffer.commit()
