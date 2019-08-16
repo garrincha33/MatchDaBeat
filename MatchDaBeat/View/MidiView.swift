@@ -13,9 +13,10 @@ public class MidiView : UIView {
 
     private var sounds = [Sounds.snare, Sounds.crash, Sounds.kick] //remove voice here and from enum
     private var identifier = "cell"
-    private var engine = AVAudioEngine()
+    //private var engine = AVAudioEngine()
+    //MARK:- step 9 create an engine object
+    private var engine : AVAudioEngine
 
-    //MARK:- step 6 remove player and files
     private lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 1
@@ -33,16 +34,17 @@ public class MidiView : UIView {
     }()
 
     
-    public required init() {
+    public required init(engine: AVAudioEngine) {
+        //MARK:- step 10 insitailze engine
+        self.engine = engine
         super.init(frame: .zero)
         setupMidi()
-        //MARK:- step 7 create new setupEngine Function
-        setupEngine()
-        
+        //setupEngine()
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+        //MARK:- step 11 remove super init and use fatalError
+        fatalError()
     }
 
     fileprivate func setupMidi(){
@@ -79,18 +81,6 @@ public class MidiView : UIView {
             collectionView.cancelInteractiveMovement()
         }
     }
-
-    //MARK:- step 8 create new setupEngine Function
-    fileprivate func setupEngine(){
-        //setup engine
-        engine.mainMixerNode //initialzing the output node to be able to start the engine
-        engine.prepare()
-        do {
-            try engine.start()
-        } catch {
-            print(error)
-        }
-    }
 }
 
 extension MidiView : UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
@@ -106,7 +96,6 @@ extension MidiView : UICollectionViewDataSource, UICollectionViewDelegate, UICol
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! MidiCell
         cell.sound = sounds[indexPath.item]
-        //MARK:- step 9 add engine
         cell.engine = engine
         cell.delegate = self
         return cell
@@ -137,7 +126,6 @@ extension MidiView : UICollectionViewDataSource, UICollectionViewDelegate, UICol
         let soundToMove = sounds[sourceIndexPath.item]
         sounds.remove(at: sourceIndexPath.item)
         sounds.insert(soundToMove, at: destinationIndexPath.item)
-        //MARK:- step 10 remove players
     }
     //spacing
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
