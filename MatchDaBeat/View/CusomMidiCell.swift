@@ -15,16 +15,14 @@ protocol MidiCellDelegate : AnyObject {
 }
 
 public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
-    
-    //MARK:- step 1 clean up use sound
+
     public var sound : Sounds?
-    //MARK:- step 2 create didSet for engine
     public var engine : AVAudioEngine?{
         didSet{
             setupNode()
         }
     }
-    //MARK:- step 3 add player and audioFile
+
     private var player = AVAudioPlayerNode()
     private var audioFile = AVAudioFile()
     weak var delegate : MidiCellDelegate?
@@ -59,17 +57,17 @@ public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
         backgroundColor = .clear
         //tap area
         addSubview(buttonArea)
-        buttonArea.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
-        buttonArea.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
-        buttonArea.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-        buttonArea.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
+        //MARK:- step 8 adjust constants
+        buttonArea.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
+        buttonArea.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5).isActive = true
+        buttonArea.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
+        buttonArea.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapped(_:)))
         tap.delegate = self
         buttonArea.addGestureRecognizer(tap)
     }
-    
-    //MARK:- step 4 add setupNode function for didSet above
+
     fileprivate func setupNode(){
         let url = Bundle.main.url(forResource: sound!.rawValue, withExtension: sound!.fileExtension)!
         do {
@@ -85,8 +83,7 @@ public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
     @objc func tapped(_ sender: UITapGestureRecognizer){
         delegate?.pressed(self)
     }
-    
-    //MARK:- step 5 create a player function
+
     public func play(){
         player.scheduleFile(audioFile, at: nil, completionHandler: nil)
         player.play()
