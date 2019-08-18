@@ -9,6 +9,8 @@
 
 import UIKit
 import AVFoundation
+//MARK :- step 2 import
+import Accelerate
 
 protocol MidiCellDelegate : AnyObject {
     func pressed(_ cell: MidiCell)
@@ -16,7 +18,6 @@ protocol MidiCellDelegate : AnyObject {
 
 public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
 
-    //MARK:- step 1 add light to sound color with didset
     public var sound : Sounds?{
         didSet{
             light.backgroundColor = sound?.color
@@ -25,6 +26,12 @@ public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
     public var engine : AVAudioEngine?{
         didSet{
             setupNode()
+        }
+    }
+    //MARK :- step 3 create visualzer roperty
+    public var visualizer : Visualizer? {
+        didSet{
+            tapEngine()
         }
     }
 
@@ -39,41 +46,20 @@ public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.isUserInteractionEnabled = true
         view.isMultipleTouchEnabled = true
-        //MARK:- step 2 make clear and add a border round the button
+
         view.backgroundColor = .clear
         view.layer.borderWidth = 2
         view.layer.borderColor = UIColor.lightGray.cgColor
         return view
     }()
-    //MARK:- step 3 make cover over button
+
     private lazy var buttonCover : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
-        //blur and vibrancy
-        //        let blur = UIBlurEffect(style: .extraLight)
-        //        let vibrancy = UIVibrancyEffect(blurEffect: blur)
-        //        let blurView = UIVisualEffectView(effect: blur)
-        //        blurView.translatesAutoresizingMaskIntoConstraints = false
-        //        let vibrancyView = UIVisualEffectView(effect: vibrancy)
-        //        vibrancyView.translatesAutoresizingMaskIntoConstraints = false
-        //
-        //        view.addSubview(blurView)
-        //        view.addSubview(vibrancyView)
-        //
-        //        vibrancyView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        //        vibrancyView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        //        vibrancyView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        //        vibrancyView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        //
-        //        blurView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        //        blurView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        //        blurView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        //        blurView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         return view
     }()
-    
-    //MARK:- step 4 add light property
+
     private lazy var light : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -105,8 +91,6 @@ public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapped(_:)))
         tap.delegate = self
         buttonArea.addGestureRecognizer(tap)
-        
-        //MARK:- step 5 add button area to subview and button cover
         //light
         buttonArea.addSubview(light)
         light.centerXAnchor.constraint(equalTo: buttonArea.centerXAnchor).isActive = true
@@ -114,7 +98,6 @@ public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
         light.widthAnchor.constraint(equalToConstant: 50).isActive = true
         light.heightAnchor.constraint(equalToConstant: 50).isActive = true
         //light.isHidden = true
-        
         buttonArea.addSubview(buttonCover)
         buttonCover.leadingAnchor.constraint(equalTo: buttonArea.leadingAnchor).isActive = true
         buttonCover.trailingAnchor.constraint(equalTo: buttonArea.trailingAnchor).isActive = true
@@ -128,11 +111,30 @@ public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
         do {
             audioFile = try AVAudioFile(forReading: url)
             let format = audioFile.processingFormat
+            print(format)
             engine!.attach(player)
             engine!.connect(player, to: engine!.mainMixerNode, format: format)
         } catch let error {
             print(error.localizedDescription)
         }
+    }
+    //MARK :- step 4 create tap engine function
+    func tapEngine(){
+        player.installTap(onBus: 0, bufferSize: 1024, format: nil) { (buffer, _) in
+            self.visualizer?.rms(from: buffer, with: 1024)
+        }
+    }
+    //MARK :- step 5 create RMS function for buffer
+    func rms(from buffer: AVAudioPCMBuffer, with bufferSize: UInt){
+        guard let channelData = buffer.floatChannelData?[0] else {return}
+        var val = Float(0);
+        
+        vDSP_vsq(channelData, 1, channelData, 1, bufferSize) //square
+        vDSP_meanv(channelData, 1, &val, bufferSize) //mean
+        val = val + 0.5
+        if val == 0.5 {return}
+        print(val, " from sound: ",sound!.rawValue)
+        visualizer?.scaleValue = val
     }
 
     @objc func tapped(_ sender: UITapGestureRecognizer){
@@ -146,10 +148,8 @@ public class MidiCell : UICollectionViewCell, UIGestureRecognizerDelegate {
     
     public func animate(){
         UIView.animate(withDuration: 0.1, animations: {
-            //MARK:- step 6 adjust animation so when tapped buttons color animates
             self.light.transform = CGAffineTransform(scaleX: 3, y: 3)
         }) { (_) in
-            //MARK:- step 6 adjust animation so when tapped buttons color animates
             UIView.animate(withDuration: 0.1, animations: {
                 self.light.transform = CGAffineTransform.identity
             })
