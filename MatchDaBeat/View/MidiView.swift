@@ -14,6 +14,8 @@ public class MidiView : UIView {
     private var sounds = [Sounds.snare, Sounds.crash, Sounds.kick] //remove voice here and from enum
     private var identifier = "cell"
     private var engine : AVAudioEngine
+    //MARK :- step 6 visualizer property
+    private var visualizer : Visualizer?
 
     private lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -31,9 +33,10 @@ public class MidiView : UIView {
         return collectionView
     }()
 
-    
-    public required init(engine: AVAudioEngine) {
+    //MARK :- step 7 create new init
+    public required init(engine: AVAudioEngine, visualizer: Visualizer) {
         self.engine = engine
+        self.visualizer = visualizer
         super.init(frame: .zero)
         setupMidi()
     }
@@ -92,6 +95,8 @@ extension MidiView : UICollectionViewDataSource, UICollectionViewDelegate, UICol
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: identifier, for: indexPath) as! MidiCell
         cell.sound = sounds[indexPath.item]
         cell.engine = engine
+        //MARK :- step 8 add to cell
+        cell.visualizer = visualizer
         cell.delegate = self
         return cell
     }
