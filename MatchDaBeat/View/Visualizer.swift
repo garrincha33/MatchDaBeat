@@ -8,6 +8,19 @@
 import UIKit
 import AVFoundation
 import MetalKit
+import simd
+
+//MARK:- step 7 use shaders
+let top = "#include <metal_stdlib>\n"+"#include <simd/simd.h>\n"+"using namespace metal;"
+let vertexStruct = "struct Vertex {vector_float4 color; vector_float2 pos;};"
+let vertexOutStruct = "struct VertexOut{float4 color; float4 pos [[position]];};"
+//let vertexShader = "vertex VertexOut vertexShader(const device Vertex *vertexArray [[buffer(0)]], unsigned int vid [[vertex_id]]){};"
+//let fragmentShader = "fragment float4 fragmentShader(VertexOut interpolated [[stage_in]]){};"
+//let vertexShader = "vertex void vertexShader(){};"
+//let fragmentShader = "fragment void fragmentShader(){};"
+let vertexShader = "vertex VertexOut vertexShader(const device Vertex *vertexArray [[buffer(0)]], unsigned int vid [[vertex_id]]){Vertex in = vertexArray[vid];VertexOut out;out.color = in.color;out.pos = float4(in.pos.x, in.pos.y, 0, 1);return out;};"
+let fragmentShader = "fragment float4 fragmentShader(VertexOut interpolated [[stage_in]]){return interpolated.color;};"
+
 
 public class Visualizer : UIView {
     
@@ -16,13 +29,24 @@ public class Visualizer : UIView {
     private var metalDevice : MTLDevice!
     private var metalQueue : MTLCommandQueue!
     private var pipelineState: MTLRenderPipelineState!
+    //MAR:- step 2 add mTL buffer
+    private var vertexBuffer: MTLBuffer!
 
     let circle = UIView()
+    //MARK:- step 8 create vertex struct
+    struct Vertex {
+        var color : simd_float4
+        var pos : simd_float2
+    }
+    
+    let vertices = [Vertex(color: [1, 0, 0, 1], pos: [-1, -1]),
+                    Vertex(color: [0, 1, 0, 1], pos: [0, 1]),
+                    Vertex(color: [0, 0, 1, 1], pos: [1, -1])]
     
     public required init(engine: AVAudioEngine) {
         self.engine = engine
         super.init(frame: .zero)
-
+        setupMetal() //MARK:- step 3 run on metal
         setupView()
         setupEngineTap()
     }
@@ -34,16 +58,16 @@ public class Visualizer : UIView {
     fileprivate func setupView(){
         translatesAutoresizingMaskIntoConstraints = false
         backgroundColor = .clear
-        
-        addSubview(circle)
-        circle.translatesAutoresizingMaskIntoConstraints = false
-        circle.backgroundColor = .white
-        circle.layer.cornerRadius = 50
-        circle.clipsToBounds = true
-        circle.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        circle.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        circle.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        circle.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        //MARK: step 3 comment out
+//        addSubview(circle)
+//        circle.translatesAutoresizingMaskIntoConstraints = false
+//        circle.backgroundColor = .white
+//        circle.layer.cornerRadius = 50
+//        circle.clipsToBounds = true
+//        circle.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+//        circle.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+//        circle.widthAnchor.constraint(equalToConstant: 100).isActive = true
+//        circle.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
     
     fileprivate func setupMetal(){
@@ -61,8 +85,9 @@ public class Visualizer : UIView {
         //metalDevice
         metalDevice = MTLCreateSystemDefaultDevice()
         metalView.device = metalDevice
-        metalView.isPaused = true
-        metalView.enableSetNeedsDisplay = true
+        //MARK: step 4 comment out
+//        metalView.isPaused = true
+//        metalView.enableSetNeedsDisplay = true
         
         //metalQueue
         metalQueue = metalDevice.makeCommandQueue()!
@@ -72,7 +97,8 @@ public class Visualizer : UIView {
         } catch {
             print(error)
         }
-        
+        //MARK:- step 10 add vertexBuffer
+        vertexBuffer = metalDevice.makeBuffer(bytes: vertices, length: vertices.count * MemoryLayout<Vertex>.stride, options: [])!
     }
     
     public func setupEngineTap(){
@@ -135,8 +161,15 @@ extension Visualizer : MTKViewDelegate {
         guard let commandBuffer = metalQueue.makeCommandBuffer() else {return}
         guard let renderDescriptor = view.currentRenderPassDescriptor else {return}
         
-        renderDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(0, 0, 0, 0)
+        renderDescriptor.colorAttachments[0].clearColor = MTLClearColorMake(1, 0, 0, 1)
         guard let renderEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: renderDescriptor) else {return}
+        
+        //MARK: step 6 add for later
+        //We tell it what render pipeline to use
+        renderEncoder.setRenderPipelineState(pipelineState)
+        // What vertex buffer data to use
+        renderEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+        renderEncoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: vertices.count)
 
         renderEncoder.endEncoding()
         commandBuffer.present(view.currentDrawable!)
@@ -145,10 +178,11 @@ extension Visualizer : MTKViewDelegate {
     
     func buildRenderPipelineWith(device: MTLDevice, metalKitView: MTKView) throws -> MTLRenderPipelineState {
         let pipelineDescriptor = MTLRenderPipelineDescriptor()
-        
-        let library = device.makeDefaultLibrary()
-        pipelineDescriptor.vertexFunction = library?.makeFunction(name: "vertexShader")
-        pipelineDescriptor.fragmentFunction = library?.makeFunction(name: "fragmentShader")
+        //MARK:- step 9 use shaders
+        let shader = top + vertexStruct + vertexOutStruct + vertexShader + fragmentShader
+        let library = try! device.makeLibrary(source: shader, options: nil)
+        pipelineDescriptor.vertexFunction = library.makeFunction(name: "vertexShader")
+        pipelineDescriptor.fragmentFunction = library.makeFunction(name: "fragmentShader")
         
         pipelineDescriptor.colorAttachments[0].pixelFormat = metalKitView.colorPixelFormat
         
