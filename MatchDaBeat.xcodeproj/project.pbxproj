@@ -45,7 +45,6 @@
 		1B0B520923017F2700759822 /* CustomMidiFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMidiFlowLayout.swift; sourceTree = "<group>"; };
 		1B0B520B23019AF200759822 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		1BE5B5B72306DDC00041D03A /* Visualizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Visualizer.swift; sourceTree = "<group>"; };
-		1BE5B5B9230706A10041D03A /* ShaderDefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShaderDefs.h; sourceTree = "<group>"; };
 		1BE5B5BA230706D80041D03A /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,7 +96,6 @@
 		1B0B51F423015E6300759822 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				1BE5B5B9230706A10041D03A /* ShaderDefs.h */,
 				1BE5B5BA230706D80041D03A /* Shaders.metal */,
 			);
 			path = Model;
